@@ -101,15 +101,6 @@ fun MainAPI.fixUrl(url: String): String {
     }
 }
 
-//\.([A-z]) instead of \.([^-\s]) to preserve numbers like 17.4
-val String?.textClean: String?
-    get() = (this
-        ?.replace(
-            "\\.([A-z]|\\+)".toRegex(),
-            "$1"
-        ) //\.([^-\s]) BECAUSE + COMES AFTER YOU HAVE TO ADD \+ for stuff like shapes.h.i.+fted
-        ?.replace("\\+([A-z])".toRegex(), "$1") //\+([^-\s])
-            )
 
 fun stripHtml(txt: String, chapterName: String? = null, chapterIndex: Int? = null): String {
     val document = Jsoup.parse(txt)

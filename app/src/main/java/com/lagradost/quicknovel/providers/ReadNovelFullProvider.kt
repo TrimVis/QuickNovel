@@ -43,7 +43,7 @@ class ReadNovelFullProvider : MainAPI() {
         val response = app.get(url)
         val document = Jsoup.parse(response.text)
         return document.selectFirst("div#chr-content")
-            ?.html().textClean?.replace("[Updated from F r e e w e b n o v e l. c o m]", "")
+            ?.html()?.replace("[Updated from F r e e w e b n o v e l. c o m]", "")
     }
 
     override suspend fun load(url: String): LoadResponse {

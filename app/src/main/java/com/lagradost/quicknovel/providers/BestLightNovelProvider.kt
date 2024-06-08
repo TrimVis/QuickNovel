@@ -20,7 +20,8 @@ class BestLightNovelProvider : MainAPI() {
     override suspend fun loadHtml(url: String): String? {
         val document = app.get(url).document
         val res = document.selectFirst("div.vung_doc")
-        return res?.html().textClean?.replace("[Updated from F r e e w e b n o v e l. c o m]", "")
+        return res?.html()
+            ?.replace("[Updated from F r e e w e b n o v e l. c o m]", "")
             ?.replace(
                 "Find authorized novels in Webnovel，faster updates, better experience，Please click for visiting. ",
                 ""

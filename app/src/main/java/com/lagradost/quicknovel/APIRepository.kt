@@ -11,9 +11,25 @@ data class OnGoingSearch(
     val data: Resource<List<SearchResponse>>
 )
 
+val String?.textClean: String?
+    get() {
+        if (this.isNullOrBlank()) return null
+
+        //\.([A-z]) instead of \.([^-\s]) to preserve numbers like 17.4
+        return this
+            //\.([^-\s]) BECAUSE + COMES AFTER YOU HAVE TO ADD \+ for stuff like shapes.h.i.+fted
+            .replace("\\.([A-z]|\\+)".toRegex(), "$1")
+            //\+([^-\s])
+            .replace("\\+([A-z])".toRegex(), "$1")
+
+    }
+
 private fun String?.removeAds(): String? {
     if (this.isNullOrBlank()) return null
-    return this.replace("(adsbygoogle = window.adsbygoogle || []).push({});", "")
+    // Remove google ads and also any iframes
+    return this
+        .replace("(adsbygoogle = window.adsbygoogle || []).push({});", "")
+        .replace("<iframe.*></iframe>".toRegex(), "")
 }
 
 class APIRepository(val api: MainAPI) {
@@ -94,7 +110,7 @@ class APIRepository(val api: MainAPI) {
      * */
     suspend fun loadHtml(url: String): String? {
         return try {
-            api.loadHtml(api.fixUrl(url))?.removeAds()
+            api.loadHtml(api.fixUrl(url))?.removeAds().textClean
         } catch (e: Exception) {
             logError(e)
             null
